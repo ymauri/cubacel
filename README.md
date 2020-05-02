@@ -1,2 +1,1 @@
-# cubacel
-Prestashop module
+# Módulo de Recargas Cubacel

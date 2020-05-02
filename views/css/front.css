@@ -1,0 +1,68 @@
+   .recharge input {
+       border: 2px solid #f3f2f2f2;
+       max-width: 170px;
+       margin-right: -3px;
+       margin-top: 2px;
+       color: #aaaaaa;
+       border-radius: 8px;
+   }
+   
+   .card {
+       border: none !important;
+   }
+   
+   .prod-recharge .fade-recharge {
+       position: absolute;
+       display: block;
+       margin: 13% auto;
+       text-align: center;
+       width: 100%;
+       background: rgba(208, 21, 67, .7);
+       color: #fff;
+       text-transform: uppercase;
+       height: 85%;
+       padding: 37% 0;
+       font-weight: 700;
+       border-radius: 2px;
+   }
+   
+   .oft-content .oft {
+       opacity: 0
+   }
+   
+   .oft-content:hover .oft {
+       opacity: 1;
+       background: rgba(208, 21, 67, .7);
+   }
+   
+   .oft-content img {
+       max-height: 221px;
+   }
+   
+   .cubacel-product .item {
+       padding: 20px;
+       border-radius: 8px;
+       border: 1px solid #dfdfdf;
+   }
+   
+   .recharge .btn {
+       border-radius: 8px;
+       border: 2px solid #f3f2f2;
+       color: #aaaaaa;
+   }
+   
+   .recharge .btn:hover {
+       color: white;
+       background-color: black;
+       border: 2px solid black;
+   }
+   
+   input::-webkit-outer-spin-button,
+   input::-webkit-inner-spin-button {
+       -webkit-appearance: none;
+       margin: 0;
+   }
+   
+   input[type=number] {
+       -moz-appearance: textfield;
+   }
