@@ -1,6 +1,7 @@
 <?php
 
 require_once dirname(__FILE__) . '/../../classes/CubacelBlacklist.php';
+require_once dirname(__FILE__) . '/../../classes/Nomenclators.php';
 
 /**
  * Class CubacelBackController
@@ -54,12 +55,12 @@ class AdminCubacelBlacklistController extends ModuleAdminController {
                     'values' => [
                         [
                             'id' => 'internet_active_on',
-                            'value' => 'Movil',
+                            'value' => Nomenclators::RECHARGE_MOBILE,
                             'label' => $this->l('Movil')
                         ],
                         [
                             'id' => 'internet_active_off',
-                            'value' => "Internet",
+                            'value' => Nomenclators::RECHARGE_INTERNET,
                             'label' => $this->l('Internet')
                         ]
                     ],

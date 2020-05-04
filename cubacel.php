@@ -3,9 +3,10 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 require_once __DIR__. '/libs/Recharger.php';
+require_once __DIR__. '/classes/Nomenclators.php';
 
 class Cubacel extends Module {
-
+    
     public function __construct() {
         $this->name = 'cubacel';
         $this->tab = 'administration';
@@ -14,10 +15,6 @@ class Cubacel extends Module {
         $this->need_instance = 0;
         $this->ps_versions_compliancy =  ['min' => '1.7', 'max' => _PS_VERSION_];
         $this->bootstrap = true;
-
-        $this->logger = new FileLogger(0); 
-        //Create folder if not exists
-        $this->logger->setFilename(_PS_ROOT_DIR_."\log\debug.log");
 
         parent::__construct();
 
@@ -38,6 +35,17 @@ class Cubacel extends Module {
         }
     
         include(dirname(__FILE__).'/sql/install.php');
+
+        //Create log fields
+        if (!is_dir(_PS_ROOT_DIR_.'/log')) {
+            mkdir(_PS_ROOT_DIR_.'/log', 766);
+            $recharge = fopen(_PS_ROOT_DIR_.'/log/recharge.log', "w");
+            fwrite($recharge,'Installed on '.date('Y-m-d h:i:s'));
+            fclose($recharge);
+            $debug = fopen(_PS_ROOT_DIR_.'/log/debug.log', "w");
+            fwrite($debug,'Installed on '.date('Y-m-d h:i:s'));
+            fclose($debug);
+        }       
 
         return parent::install() &&
             $this->registerHook('displayHome') &&
@@ -220,19 +228,16 @@ class Cubacel extends Module {
     }
 
     //Registrar el log para las recargas cubacel
-    public function hookActionPaymentConfirmation($params) {
-        
-
+    public function hookActionPaymentConfirmation($params) {   
         $languageId = (int)($params['cookie']->id_lang);
-
         try {
             $query = "SELECT "._DB_PREFIX_."order_detail.id_order as id_order, 
-                            "._DB_PREFIX_."orders.reference as reference, 
-                            "._DB_PREFIX_."order_detail.product_id as product_id, 
-                            "._DB_PREFIX_."order_detail.product_quantity as product_quantity, 
-                            "._DB_PREFIX_."customized_data.value as data_value, 
-                            "._DB_PREFIX_."product.id_category_default as category, 
-                            "._DB_PREFIX_."feature_value_lang.value as amount 
+                        "._DB_PREFIX_."orders.reference as reference, 
+                        "._DB_PREFIX_."order_detail.product_id as product_id, 
+                        "._DB_PREFIX_."order_detail.product_quantity as product_quantity, 
+                        "._DB_PREFIX_."customized_data.value as data_value, 
+                        "._DB_PREFIX_."product.id_category_default as category, 
+                        "._DB_PREFIX_."feature_value_lang.value as amount 
                         FROM "._DB_PREFIX_."orders
                         INNER JOIN `"._DB_PREFIX_."order_detail` ON "._DB_PREFIX_."order_detail.id_order = "._DB_PREFIX_."orders.id_order
                         INNER JOIN `"._DB_PREFIX_."customized_data` on "._DB_PREFIX_."order_detail.id_customization = "._DB_PREFIX_."customized_data.id_customization
@@ -241,32 +246,21 @@ class Cubacel extends Module {
                         INNER JOIN `"._DB_PREFIX_."feature_value_lang` ON "._DB_PREFIX_."feature_value_lang.id_feature_value = "._DB_PREFIX_."feature_product.id_feature_value
                         WHERE "._DB_PREFIX_."order_detail.id_order = ".$params['id_order']." AND "._DB_PREFIX_."feature_value_lang.id_lang = ".$languageId;
 
-           
             $products = Db::getInstance()->executeS($query);
-
+             
             foreach ($products as $product) {
-                if ($product['category'] == Configuration::get('CUBACEL_MOBILE_DEPARTMENT'))
-                    $type = 'Movil';
-                else if ($product['category'] == Configuration::get('CUBACEL_MOBILE_DEPARTMENT')) 
-                    $type = 'Internet';
-
-                $query = "SELECT * FROM "._DB_PREFIX_."cubacel_log WHERE id_order LIKE '".$product['reference']."' AND account LIKE '".$product['data_value']."'";
+                $type = $this->getType($product['category']);    
+                $query = "SELECT * FROM "._DB_PREFIX_."cubacel_log WHERE id_order LIKE '".$product['id_order']."' AND account LIKE '".$product['data_value']."'";
                 $productDb = Db::getInstance()->getRow($query);
-                // $logger->logDebug($query);    
-                // $logger->logDebug($productDb);    
                 if (!empty($type) && !isset($productDb['id'])) {
-                    Db::getInstance()->insert('cubacel_log', array(
-                        'id_order' => $product['reference'],
+                    Db::getInstance()->insert('cubacel_log',[
+                        'id_order' => $product['id_order'],
                         'account' => $product['data_value'],
                         'type' => $type,
                         'attemps' => 0,
                         'amount' => $product['amount'],                    
-                        'status' => 'Pagado'
-                    ));
-                    // $insert = "INSERT INTO "._DB_PREFIX_."cubacel_log (id_order, account, type, attemps, reference, amount, status)
-                    //         VALUES ('".$product['reference']."', '".$product['data_value']."', '".$type."', 0, '', '".$product['amount']."', 'Pagado')";
-                    //         $logger->logDebug($insert);
-                    //         Db::getInstance()->execute($insert);
+                        'status' => Nomenclators::STATUS_PAYED
+                    ]);
                 }
             }   
             return true;
@@ -364,5 +358,13 @@ class Cubacel extends Module {
     public function hookDisplayHeader() {
         $this->context->controller->addJS($this->_path.'views/js/front.js');
         $this->context->controller->addCSS($this->_path.'views/css/front.css', 'all');
+    }
+
+    private function getType ($category) {
+        if ($category == Configuration::get('CUBACEL_MOBILE_DEPARTMENT'))
+            return Nomenclators::RECHARGE_MOBILE;
+        else if ($category == Configuration::get('CUBACEL_MOBILE_DEPARTMENT')) 
+            return Nomenclators::RECHARGE_INTERNET;
+        return false;
     }
 }

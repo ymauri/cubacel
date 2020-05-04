@@ -39,6 +39,10 @@ class AdminCubacelLogController extends ModuleAdminController {
                 'title' => $this->module->l('Monto'),
                 'align' => 'center',
             ),
+            'reference' => array(
+                'title' => $this->module->l('Referencia'),
+                'align' => 'center',
+            ),
             'status' => array(
                 'title' => $this->module->l('Estado'),
                 'align' => 'left',
@@ -51,19 +55,7 @@ class AdminCubacelLogController extends ModuleAdminController {
             'legend' => [
                 'title' => $this->l('Modificar recarga'),
             ],
-            'input' => [
-                [
-                    'type' => 'text',
-                    'label' => $this->l('Pedido'),
-                    'name' => 'id_order',
-                    'disabled' => true,
-                ],
-                [
-                    'type' => 'text',
-                    'label' => $this->l('Cuenta'),
-                    'name' => 'account',
-                    'disabled' => true,
-                ],
+            'input' => [                
                 [
                     'type' => 'text',
                     'label' => $this->l('Intentos'),
