@@ -1,4 +1,7 @@
 <?php
+
+require_once dirname(__FILE__) . '/../../classes/Nomenclators.php';
+
 class CubacelJobModuleFrontController extends ModuleFrontController {
     
     public function postProcess() {
@@ -8,20 +11,34 @@ class CubacelJobModuleFrontController extends ModuleFrontController {
         $minute = (int) date('m');
         if ($minute % 4 == 0) {
             $db = \Db::getInstance();
-            $sql = 'SELECT * FROM '. _DB_PREFIX_.'cubacel_log WHERE `status` LIKE "Pagado" AND attemps < 4';
+            $sql = 'SELECT * FROM '._DB_PREFIX_.'cubacel_log WHERE `status` LIKE "'.Nomenclators::STATUS_PAYED.'" AND attemps < 4';
             
             $result = $db->getRow($sql);
-
             if(!empty($result['id']) && !$this->isInBlackList($result['account'])) {
                 $recharger = new Recharger($result['account'], $result['amount']);
                 $rechargerResult = $recharger->make();
                 $attemp = $result['attemps'] += 1;
                 
                 $logger->logDebug($rechargerResult['response']);
-                $status = $rechargerResult['status'] == "Success" ? "Recargado" : "Pagado";
-                $sql = 'UPDATE '. _DB_PREFIX_.'cubacel_log SET attemps = '.$attemp.', reference = "'.$rechargerResult['reference'].'", status = "'.$status.'"  WHERE `id` = '.$result['id'];
-                $db->executeS($sql);
+                $status = $this->parseStatus($rechargerResult['status']);
+            
+                $resultQuery = $db->update('cubacel_log', [
+                    'attemps' => $attemp,
+                    'reference' => pSQL($rechargerResult['reference']),
+                    'status' => pSQL($status),
+                    'message' => pSQL($rechargerResult['message']),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ], 'id = ' . $result['id'] , 1, true);
+                
                 //Update order status. Find out a hook for update order status. 
+                if ($status == Nomenclators::STATUS_RECHARGED && $resultQuery) {
+                    $logger->logDebug($rechargerResult['response']);
+                    $objOrder = new Order((int)$result['id_order']);
+                    $history = new OrderHistory();
+                    $history->id_order = (int)$objOrder->id;
+                    $history->changeIdOrderState(5, (int)($objOrder->id)); //order status=3
+                    $history->add();
+                }                
                 var_dump($rechargerResult['response']);die;
             }
         }
@@ -34,4 +51,13 @@ class CubacelJobModuleFrontController extends ModuleFrontController {
         $result = $db->getRow($sql);
         return !empty($result['id']);
     }
-}
+
+    private function parseStatus ($status) {
+        switch ($status) {
+            case 1:
+                return Nomenclators::STATUS_RECHARGED;
+            default:
+                return Nomenclators::STATUS_PAYED;
+        }
+    }
+ }
