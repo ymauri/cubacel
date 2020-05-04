@@ -38,7 +38,7 @@ class CubacelLog extends ObjectModel  {
                 'required' => true
             ),            
             'status' => array(
-                'type' => self::TYPE_INT,
+                'type' => self::TYPE_STRING,
                 'required' => true
             ),
         )
