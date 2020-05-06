@@ -247,9 +247,9 @@ class Cubacel extends Module {
                         WHERE "._DB_PREFIX_."order_detail.id_order = ".$params['id_order']." AND "._DB_PREFIX_."feature_value_lang.id_lang = ".$languageId;
 
             $products = Db::getInstance()->executeS($query);
-             
+            
             foreach ($products as $product) {
-                $type = $this->getType($product['category']);    
+                $type = $this->getType($product['category']);  
                 $query = "SELECT * FROM "._DB_PREFIX_."cubacel_log WHERE id_order LIKE '".$product['id_order']."' AND account LIKE '".$product['data_value']."'";
                 $productDb = Db::getInstance()->getRow($query);
                 if (!empty($type) && !isset($productDb['id'])) {
@@ -363,7 +363,7 @@ class Cubacel extends Module {
     private function getType ($category) {
         if ($category == Configuration::get('CUBACEL_MOBILE_DEPARTMENT'))
             return Nomenclators::RECHARGE_MOBILE;
-        else if ($category == Configuration::get('CUBACEL_MOBILE_DEPARTMENT')) 
+        else if ($category == Configuration::get('CUBACEL_INTERNET_DEPARTMENT')) 
             return Nomenclators::RECHARGE_INTERNET;
         return false;
     }
