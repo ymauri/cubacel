@@ -1,5 +1,7 @@
 <?php
 require_once dirname(__FILE__) . '/../vendors/nusoap/nusoap.php';
+require_once dirname(__FILE__) . '/../classes/Nomenclators.php';
+
 class Recharger {
 
     private $gateway;
@@ -75,18 +77,18 @@ class Recharger {
 
     private function accountType ($account) {
         if (ctype_digit($account)) {
-            return 'Movil';
+            return Nomenclators::RECHARGE_MOBILE;
         } else if(filter_var($account, FILTER_VALIDATE_EMAIL)){
-            return "Internet";
+            return Nomenclators::RECHARGE_INTERNET;
         }
         return false;
     }
 
     private function getAccountByMode ($account) {
         switch ($this->type) {
-            case "Movil":
+            case Nomenclators::RECHARGE_MOBILE:
                 return $this->prefix.(Configuration::get('CUBACEL_MOBILE_ACTIVE') == 1 ? $account : Configuration::get('CUBACEL_MOBILE_TEST'));
-            case "Internet":
+            case Nomenclators::RECHARGE_INTERNET:
                 return Configuration::get('CUBACEL_INTERNET_ACTIVE') == 1 ? $account : Configuration::get('CUBACEL_INTERNET_TEST');
             default:
                 return false;
