@@ -46,6 +46,10 @@ class AdminCubacelLogController extends ModuleAdminController {
             'status' => array(
                 'title' => $this->module->l('Estado'),
                 'align' => 'left',
+            ),            
+            'updated_at' => array(
+                'title' => $this->module->l('Actualizado'),
+                'align' => 'left',
             ),
         );
     }
