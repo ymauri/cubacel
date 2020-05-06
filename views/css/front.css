@@ -4,7 +4,7 @@
        margin-right: -3px;
        margin-top: 2px;
        color: #aaaaaa;
-       border-radius: 8px;
+       border-radius: 4px;
    }
    
    .card {
@@ -23,7 +23,7 @@
        height: 85%;
        padding: 37% 0;
        font-weight: 700;
-       border-radius: 2px;
+       border-radius: 1px;
    }
    
    .oft-content .oft {
@@ -41,12 +41,12 @@
    
    .cubacel-product .item {
        padding: 20px;
-       border-radius: 8px;
+       border-radius: 4px;
        border: 1px solid #dfdfdf;
    }
    
    .recharge .btn {
-       border-radius: 8px;
+       border-radius: 4px;
        border: 2px solid #f3f2f2;
        color: #aaaaaa;
    }

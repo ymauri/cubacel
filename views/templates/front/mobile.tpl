@@ -13,11 +13,10 @@
           <!--<form method="post" action="#" autocomplete="off">-->
             <div class="row">          
                    {foreach $products as $product}
-                      <div class="col-3 col-md-3 cubacel-product mb-2">
+                      <div class="col-12 col-lg-2 cubacel-product mb-2">
                           <div class="item">
                               <div class="item-inner hover_second_img">
                                 <div class="js-product-miniature" data-id-product="{$product['id']}" data-id-product-attribute="0" itemscope="" itemtype="http://schema.org/Product">
-                                    
                                     <div class="text-center">
                                         <img class="w-100 img-thumbnail img-fluid" src="{$link->getImageLink($product['link_rewrite'], $product['id_image'])}" width="370" height="448" alt="" style="opacity: 1;">
                                         <span class="box-new-sale"></span>
@@ -31,7 +30,7 @@
                                           <input type="hidden" name="id_customization" id="product_customization_id-{$product['id']}">
                                           <input type="hidden" name="qty" value="1">
                                           <input type="number" min="50000000" max="59999999" id="phone-{$product['id']}" class="mb-2 form-control d-inline mt-1 text-center" required="required" aria-label="Small" placeholder="Solo 8 dígitos" aria-describedby="inputGroup-sizing-sm">
-                                        <a href="#" class="btn d-inline button-action add-custom" data-id="{$product['id']}" title="Añadir al carrito">Añadir al carrito</a>
+                                        <a href="#" class="btn d-inline button-action add-custom" data-id="{$product['id']}" title="Recargar">Recargar</a>
                                         <a href="javascript:void(0)" class="btn d-inline button-action add-to-cart add-{$product['id']}" data-button-action="add-to-cart" title="Añadir al carrito" style="display:none !important;">Añadir al carrito</a>
                                     </form>
                                 </div>

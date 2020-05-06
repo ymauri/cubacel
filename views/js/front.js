@@ -2,16 +2,13 @@ let CubacelFront = function() {
     let idProduct;
 
     let validatePhone = function(number) {
-        if (number.length != 8) {
-            alert("El numero de movil debe tener 8 digitos");
-            return false;
-        }
-        if (number.substr(0, 2) != 52 && number.substr(0, 2) != 53 && number.substr(0, 2) != 54 && number.substr(0, 2) != 55 && number.substr(0, 2) != 56 && number.substr(0, 2) != 58 && number.substr(0, 2) != 59) {
-            alert("El numero de movil debe empezar con 52, 53, 54, 55, 56 o 58");
-            return false;
-        }
+        var regex = /^(52|53|54|55|57|56|58|59)([0-9]{6})$/;
+        return regex.test(number);
+    }
 
-        return true;
+    let validateEmail = function(email) {
+        var regex = /^\w+([\.-]?\w+)*@nauta.com.cu$/;
+        return regex.test(email);
     }
 
     let saveCustomizedData = function(field) {
@@ -29,7 +26,6 @@ let CubacelFront = function() {
             } else {
                 alert(response.msg);
             }
-
         });
         return false;
     }
@@ -40,8 +36,12 @@ let CubacelFront = function() {
             idProduct = $(this).attr('data-id');
 
             let phone = $('#phone-' + idProduct);
+            let email = $('#email-' + idProduct);
             if (phone.val() && validatePhone(phone.val())) {
                 saveCustomizedData(phone);
+            }
+            if (email.val() && validateEmail(email.val())) {
+                saveCustomizedData(email);
             } else {
                 alert('Error!')
             }
