@@ -16,13 +16,13 @@ class CubacelMobileModuleFrontController extends ModuleFrontController {
       foreach ($productsObj as $prd) {
         $product = new Product((int)$prd['id_product'], false, $this->context->language->id);        
         $img = $product->getCover((int)$prd['id_product']);
+        // $features = $product->getFeatures();
         $products[] = [
           'id' => $prd['id_product'],
           'name' => $product->name,
           'price' => $product->price,
           'id_image' => (int)$img['id_image'],
           'link_rewrite' => $product->link_rewrite,
-          'obj' => $product,
           'id_customization' => $prd['id_customization_field'],
         ];
       }
