@@ -75,7 +75,12 @@ class Cubacel extends Module {
                 $output .= $this->displayConfirmation($this->l('Configuraciones actualizadas'));
             }
         }
-        return $output.$this->displayForm();
+        $output .= $this->displayForm();
+        $linkMobile = Context::getContext()->link->getModuleLink('cubacel', 'mobile');
+        $linkInternet = Context::getContext()->link->getModuleLink('cubacel', 'internet');
+        $output .= '<div class="panel"><b>URL Recarga de móviles:</b> <a href="'.$linkMobile.'">'.$linkMobile.'</a><br>';
+        $output .= '<b>URL Recarga de internet:</b> <a href="'.$linkMobile.'">'.$linkInternet.'</a><br></div>';
+        return $output;
     }
 
     //Formulario de configuración

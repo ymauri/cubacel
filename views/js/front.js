@@ -34,17 +34,15 @@ let CubacelFront = function() {
         $('.add-custom').click(function(e) {
             e.preventDefault();
             idProduct = $(this).attr('data-id');
-
             let phone = $('#phone-' + idProduct);
             let email = $('#email-' + idProduct);
-            if (phone.val() && validatePhone(phone.val())) {
+            if (phone.length > 0 && phone.val() && validatePhone(phone.val())) {
                 saveCustomizedData(phone);
             }
-            if (email.val() && validateEmail(email.val())) {
+            if (email.length > 0 && email.val() && validateEmail(email.val())) {
                 saveCustomizedData(email);
-            } else {
-                alert('Error!')
             }
+            return;
         });
     }
 
