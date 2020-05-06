@@ -53,8 +53,7 @@ class Recharger {
             if ($res_send[0]["ResultId"] == 1) {
                 $status = (string)$res_send[0]["ResultId"];
                 $message = (string)"Success";
-                $reference = (string)$res_send[0]["ConfirmId"];
-                // Yii::getLogger()->log($response, 'info', 'phone_recharge');
+                $reference = (string)$res_send[0]["ConfirmId"];                
             } else {
                 $status = $res_send[0]["ResultId"];
                 $message = $res_send[0]["ResultStr"];
