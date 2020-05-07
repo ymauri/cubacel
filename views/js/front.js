@@ -3,15 +3,32 @@ let CubacelFront = function() {
     let alertBox = $('.alert_notice').first();
     let alertDefaultHTML = alertBox.html();
 
-    let validatePhone = function(number) {
+    /**
+     * Validate cubacel phone number
+     * @param string phone
+     * @returns boolean
+     */
+    let validatePhone = function(phone) {
         var regex = /^(52|53|54|55|57|56|58|59)([0-9]{6})$/;
         return regex.test(number);
     }
 
+    /**
+     * Validate email format
+     * @param string email
+     * @returns boolean
+     */
     let validateEmail = function(email) {
         var regex = /^\w+([\.-]?\w+)*@nauta.com.cu$/;
         return regex.test(email);
     }
+
+    /**
+     * Make requesto for creating customization field
+     * 
+     * @param object field 
+     * @returns void
+     */
 
     let saveCustomizedData = function(field) {
         var formActionAttribute_url = $("form#customization-" + idProduct).attr('action');
@@ -29,9 +46,13 @@ let CubacelFront = function() {
                 showAlertMessage(response.msg, 'danger');
             }
         });
-        return false;
+        return;
     }
 
+    /**
+     * Add to cart custom button 
+     * @returns void
+     */
     let addToCart = function() {
         $('a.add-custom').click(function(e) {
             e.preventDefault();
@@ -45,16 +66,15 @@ let CubacelFront = function() {
                 saveCustomizedData(email);
             } else {
                 let message = phone.length ? "<i class='fa fa-phone'></i>Revise que el número de móvil tenga <b>8 dígitos</b>" :
-                    email.length ? "<i class='fa fa-envelope'></i>La cuenta de internet debe tener terminar en <b>@nauta.com.cu</b>" :
+                    email.length ? "<i class='fa fa-envelope'></i>La cuenta de internet debe terminar en <b>@nauta.com.cu</b>" :
                     "<i class='fa fa-info'></i> Formato no válido";
                 showAlertMessage(message, 'danger');
             }
-
         });
     }
 
     /**
-     * 
+     * Show templante alert in a wrong case  
      * @param string message 
      * @param string type {'info', 'danger', 'warning'}
      */

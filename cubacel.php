@@ -4,6 +4,7 @@ if (!defined('_PS_VERSION_')) {
 }
 require_once __DIR__. '/libs/Recharger.php';
 require_once __DIR__. '/classes/Nomenclators.php';
+require_once __DIR__. '/classes/Service.php';
 
 class Cubacel extends Module {
     
@@ -15,6 +16,7 @@ class Cubacel extends Module {
         $this->need_instance = 0;
         $this->ps_versions_compliancy =  ['min' => '1.7', 'max' => _PS_VERSION_];
         $this->bootstrap = true;
+        $this->service = new Service();
 
         parent::__construct();
 
@@ -24,7 +26,7 @@ class Cubacel extends Module {
         $this->confirmUninstall = $this->l('¿Está seguro de que desea instalar el módulo?');
 
         if (!Configuration::get('CUBACEL')) {
-            $this->warning = $this->l('No name provided');
+            $this->warning = $this->l('No name provided.');
         }
     }
     
@@ -37,21 +39,11 @@ class Cubacel extends Module {
         include(dirname(__FILE__).'/sql/install.php');
 
         //Create log fields
-        if (!is_dir(_PS_ROOT_DIR_.'/log')) {
-            mkdir(_PS_ROOT_DIR_.'/log', 766);
-            $recharge = fopen(_PS_ROOT_DIR_.'/log/recharge.log', "w");
-            fwrite($recharge,'Installed on '.date('Y-m-d h:i:s'));
-            fclose($recharge);
-            $debug = fopen(_PS_ROOT_DIR_.'/log/debug.log', "w");
-            fwrite($debug,'Installed on '.date('Y-m-d h:i:s'));
-            fclose($debug);
-        }       
+        $this->service->createLogFields();       
 
         return parent::install() &&
-            $this->registerHook('displayHome') &&
             $this->registerHook('header') &&
             $this->registerHook('actionPaymentConfirmation') &&
-            // $this->registerHook('actionCronJob') &&
             Configuration::updateValue('CUBACEL', 'Recargas Cubacel');
     }
 
@@ -83,10 +75,12 @@ class Cubacel extends Module {
         return $output;
     }
 
-    //Formulario de configuración
+    /**
+     * Configuration form
+     */
     public function displayForm() {
         // Get default language
-        $defaultLang = (int)Configuration::get('"._DB_PREFIX_."LANG_DEFAULT');
+        $defaultLang = (int) Configuration::get('"._DB_PREFIX_."LANG_DEFAULT');
 
         // Init Fields form array
         $fieldsForm[0]['form'] = [
@@ -219,19 +213,6 @@ class Cubacel extends Module {
         return $helper->generateForm($fieldsForm);
     }
 
-    //Mostrar personalizado el listado de productos
-    //Esto puede servir para la vista del departamento
-    public function hookDisplayHome($params) {
-        $languageId = (int)($params['cookie']->id_lang);
-        $categoryMobile = new Category(Configuration::get('CUBACEL_MOBILE_DEPARTMENT'));
-        $products = $categoryMobile->getProducts($languageId, 1, 10);
-        $this->smarty->assign(array(
-            'products' => $products
-        ));
- 
-        return $this->display($this->_path, 'views/templates/front/cubacel.tpl');
-    }
-
     //Registrar el log para las recargas cubacel
     public function hookActionPaymentConfirmation($params) {   
         $languageId = (int)($params['cookie']->id_lang);
@@ -254,7 +235,7 @@ class Cubacel extends Module {
             $products = Db::getInstance()->executeS($query);
             
             foreach ($products as $product) {
-                $type = $this->getType($product['category']);  
+                $type = $this->service->getType($product['category']);  
                 $query = "SELECT * FROM "._DB_PREFIX_."cubacel_log WHERE id_order LIKE '".$product['id_order']."' AND account LIKE '".$product['data_value']."'";
                 $productDb = Db::getInstance()->getRow($query);
                 if (!empty($type) && !isset($productDb['id'])) {
@@ -290,6 +271,23 @@ class Cubacel extends Module {
             $parentTab->id_parent = 0;
             $parentTab->module = '';
             $parentTab->add();
+        }
+        
+        //Sub menu code
+        if (!(int) Tab::getIdFromClassName('AdminCubacelPromotion')) {
+            $parentTabID = Tab::getIdFromClassName('AdminMallHabana');
+            $parentTab = new Tab($parentTabID);
+
+            $tab = new Tab();
+            $tab->active = 1;
+            $tab->class_name = "AdminCubacelPromotion";
+            $tab->name = array();
+            foreach ($languages as $language) {
+                $tab->name[$language['id_lang']] = $this->l('Promoción');
+            }
+            $tab->id_parent = $parentTab->id;
+            $tab->module = $this->name;
+            $tab->add();
         }
 
         //Sub menu code
@@ -347,7 +345,7 @@ class Cubacel extends Module {
         return $tab->delete();
     }
 
-     /**
+    /**
     * Add the CSS & JavaScript files you want to be loaded in the BO.
     */
     public function hookBackOfficeHeader() {
@@ -365,11 +363,5 @@ class Cubacel extends Module {
         $this->context->controller->addCSS($this->_path.'views/css/front.css', 'all');
     }
 
-    private function getType ($category) {
-        if ($category == Configuration::get('CUBACEL_MOBILE_DEPARTMENT'))
-            return Nomenclators::RECHARGE_MOBILE;
-        else if ($category == Configuration::get('CUBACEL_INTERNET_DEPARTMENT')) 
-            return Nomenclators::RECHARGE_INTERNET;
-        return false;
-    }
+   
 }
