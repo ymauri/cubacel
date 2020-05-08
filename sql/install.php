@@ -23,6 +23,17 @@ $queries[] = "CREATE TABLE IF NOT EXISTS "._DB_PREFIX_."cubacel_blacklist (
           PRIMARY KEY (`id`)
         ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
 
+        
+$queries[] = "CREATE TABLE IF NOT EXISTS "._DB_PREFIX_."cubacel_promotion (
+      `id` int(11) NOT NULL AUTO_INCREMENT,
+      `start_date` TIMESTAMP,
+      `end_date` TIMESTAMP,
+      `description` TEXT NOT NULL,
+      `enabled` TINYINT(1) NOT NULL,
+      `type` VARCHAR(128) NOT NULL,
+      PRIMARY KEY (`id`)
+    ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1;";
+
 foreach ($queries as $query) {
   Db::getInstance()->execute($query);
 }
