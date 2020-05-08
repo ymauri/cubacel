@@ -84,6 +84,7 @@ class Cubacel extends Module {
 
         // Init Fields form array
         $fieldsForm[0]['form'] = [
+            'tinymce' => true,
             'legend' => [
                 'title' => $this->l('Configuración de recargas'),
             ],
@@ -93,16 +94,20 @@ class Cubacel extends Module {
                     'label' => $this->l('Url'),
                     'name' => 'CUBACEL[CUBACEL_URL]',
                     'required' => true,
+                    'cols' => 2,
+                    'prefix' => '<i class="icon-link"></i>'
                 ],
                 [
                     'type' => 'text',
                     'label' => $this->l('Usuario'),
                     'name' => 'CUBACEL[CUBACEL_USER]',
                     'required' => true,
+                    'prefix' => '<i class="icon-user"></i>'
                 ],
                 [
                     'type' => 'password',
                     'label' => $this->l('Contraseña'),
+                    'required' => true,
                     'name' => 'CUBACEL[CUBACEL_PASSWORD]',
                 ],
                 [
@@ -127,11 +132,17 @@ class Cubacel extends Module {
                     'type' => 'text',
                     'label' => $this->l('Teléfono de prueba'),
                     'name' => 'CUBACEL[CUBACEL_MOBILE_TEST]',
+                    'required' => true,
+                    'prefix' => '<i class="icon-phone"></i>'
                 ],                      
                 [
                     'type' => 'text',
                     'label' => $this->l('ID Departamento recarga móviles'),
                     'name' => 'CUBACEL[CUBACEL_MOBILE_DEPARTMENT]',
+                    'required' => true,
+                    // 'options' => [
+                    //     'html' => $html_categories
+                    // ]
                 ],          
                 [
                     'type' => 'switch',
@@ -155,10 +166,13 @@ class Cubacel extends Module {
                     'type' => 'text',
                     'label' => $this->l('Cuenta de internet de prueba'),
                     'name' => 'CUBACEL[CUBACEL_INTERNET_TEST]',
+                    'required' => true,
+                    'prefix' => '<i class="icon-envelope-o"></i>'
                 ],
                 [
                     'type' => 'text',
                     'label' => $this->l('ID Departamento recarga internet'),
+                    'required' => true,
                     'name' => 'CUBACEL[CUBACEL_INTERNET_DEPARTMENT]',
                 ]
             ],
