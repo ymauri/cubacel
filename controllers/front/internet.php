@@ -1,33 +1,26 @@
 <?php
 
+require_once dirname(__FILE__) . '/../../classes/Nomenclators.php';
+require_once dirname(__FILE__) . '/../../classes/Service.php';
+
 class CubacelInternetModuleFrontController extends ModuleFrontController {
-    public function initContent(){
+
+    public function initContent() {
+
       parent::initContent();
 
-      $this->setTemplate('module:cubacel/views/templates/front/internet.tpl');
-      $productsObj = (Db::getInstance())->executeS((new DbQuery())
-        ->from('product', 'p')
-        ->innerJoin('customization_field', 'cf', 'cf.id_product=p.id_product')
-        ->where('p.id_category_default = '. Configuration::get('CUBACEL_INTERNET_DEPARTMENT'))
-        ->orderBy('p.price ASC')
-      );
+      $service = new Service();
 
-      $products = [];
-      foreach ($productsObj as $prd) {
-        $product = new Product((int)$prd['id_product'], false, $this->context->language->id);        
-        $img = $product->getCover((int)$prd['id_product']);
-        // $features = $product->getFeatures();
-        $products[] = [
-          'id' => $prd['id_product'],
-          'name' => $product->name,
-          'price' => $product->price,
-          'id_image' => (int)$img['id_image'],
-          'link_rewrite' => $product->link_rewrite,
-          'id_customization' => $prd['id_customization_field'],
-        ];
-      }
+      $this->setTemplate('module:cubacel/views/templates/front/internet.tpl');
+
+      $products = $service->getProducts(Configuration::get('CUBACEL_INTERNET_DEPARTMENT'));
+      
+      $promotion = $service->getPromotion(Nomenclators::RECHARGE_INTERNET);
+
       $this->context->smarty->assign([
-        'products' => $products
+        'products' => $products,
+        'has_promotion' => count($promotion) > 0,
+        'promotion' => $promotion 
       ]);
 
     }

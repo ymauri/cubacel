@@ -10,7 +10,9 @@ require_once dirname(__FILE__) . '/../../classes/Nomenclators.php';
 class CubacelJobModuleFrontController extends ModuleFrontController {
     
     public function postProcess() {
+
         $logger = new FileLogger(0);
+        
         $logger->setFilename(_PS_ROOT_DIR_."\log\recharge.log");
 
         $db = \Db::getInstance();

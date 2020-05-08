@@ -6,7 +6,11 @@
 
 {block name='content'}
   <h1 class="text-center">SERVICIO DE RECARGA DE INTERNET CUBACEL</h1>
-  </br></br>
+{if $has_promotion eq true }
+	<div class="p-1">
+    {$promotion['description'] nofilter}
+  </div>
+{/if}
   <div class="mt-8">
       <div class="tab-pane active" aria-labelledby="tab1-tab" id="tab1">
         <div class="container">
