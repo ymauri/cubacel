@@ -6,6 +6,7 @@ class CubacelPromotion extends ObjectModel {
     public $end_date;
     public $description;
     public $enabled;
+    public $type;
     public static $definition = [
         'table' => "cubacel_promotion",
         'primary' => 'id',
