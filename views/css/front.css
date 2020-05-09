@@ -1,6 +1,6 @@
    .recharge input {
        border: 2px solid #f3f2f2f2;
-       max-width: 170px;
+       /* max-width: 170px; */
        margin-right: -3px;
        margin-top: 2px;
        color: #aaaaaa;
@@ -65,4 +65,9 @@
    
    input[type=number] {
        -moz-appearance: textfield;
+   }
+   
+   #promo-container img {
+       width: 100% !important;
+       height: auto !important;
    }
