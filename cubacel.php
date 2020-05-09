@@ -274,22 +274,38 @@ class Cubacel extends Module {
         $languages = Language::getLanguages(false);
 
         //Main Parent menu
-        if (!(int) Tab::getIdFromClassName('AdminMallHabana')) {
+        if (!(int) Tab::getIdFromClassName('AdminCubacel')) {
             $parentTab = new Tab();
             $parentTab->active = 1;
             $parentTab->name = array();
-            $parentTab->class_name = "AdminMallHabana";
+            $parentTab->class_name = "AdminCubacel";
             foreach ($languages as $language) {
-                $parentTab->name[$language['id_lang']] = 'MallHabana';
+                $parentTab->name[$language['id_lang']] = 'Cubacel';
             }
             $parentTab->id_parent = 0;
             $parentTab->module = '';
             $parentTab->add();
         }
+
+        if (!(int) Tab::getIdFromClassName('AdminCubacelLog')) {
+            $parentTabID = Tab::getIdFromClassName('AdminCubacel');
+            $parentTab = new Tab($parentTabID);
+
+            $tab = new Tab();
+            $tab->active = 1;
+            $tab->class_name = "AdminCubacelLog";
+            $tab->name = array();
+            foreach ($languages as $language) {
+                $tab->name[$language['id_lang']] = $this->l('Log de Recarga');
+            }
+            $tab->id_parent = $parentTab->id;
+            $tab->icon = 'list';
+            $tab->module = $this->name;
+            $tab->add();
+        }
         
-        //Sub menu code
         if (!(int) Tab::getIdFromClassName('AdminCubacelPromotion')) {
-            $parentTabID = Tab::getIdFromClassName('AdminMallHabana');
+            $parentTabID = Tab::getIdFromClassName('AdminCubacel');
             $parentTab = new Tab($parentTabID);
 
             $tab = new Tab();
@@ -300,30 +316,13 @@ class Cubacel extends Module {
                 $tab->name[$language['id_lang']] = $this->l('Promoción');
             }
             $tab->id_parent = $parentTab->id;
+            $tab->icon = 'notifications_active';
             $tab->module = $this->name;
             $tab->add();
         }
 
-        //Sub menu code
-        if (!(int) Tab::getIdFromClassName('AdminCubacelLog')) {
-            $parentTabID = Tab::getIdFromClassName('AdminMallHabana');
-            $parentTab = new Tab($parentTabID);
-
-            $tab = new Tab();
-            $tab->active = 1;
-            $tab->class_name = "AdminCubacelLog";
-            $tab->name = array();
-            foreach ($languages as $language) {
-                $tab->name[$language['id_lang']] = $this->l('Cubacel');
-            }
-            $tab->id_parent = $parentTab->id;
-            $tab->module = $this->name;
-            $tab->add();
-        }
-        
-        //Sub menu code
         if (!(int) Tab::getIdFromClassName('AdminCubacelBlacklist')) {
-            $parentTabID = Tab::getIdFromClassName('AdminMallHabana');
+            $parentTabID = Tab::getIdFromClassName('AdminCubacel');
             $parentTab = new Tab($parentTabID);
 
             $tab = new Tab();
@@ -334,6 +333,7 @@ class Cubacel extends Module {
                 $tab->name[$language['id_lang']] = $this->l('Lista Negra');
             }
             $tab->id_parent = $parentTab->id;
+            $tab->icon = 'cancel';
             $tab->module = $this->name;
             $tab->add();
         }
