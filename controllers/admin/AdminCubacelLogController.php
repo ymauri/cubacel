@@ -36,7 +36,7 @@ class AdminCubacelLogController extends ModuleAdminController {
                 'align' => 'center',
             ),            
             'amount' => array(
-                'title' => $this->module->l('Monto'),
+                'title' => $this->module->l('Monto (CUC)'),
                 'align' => 'center',
             ),
             'reference' => array(
@@ -60,11 +60,60 @@ class AdminCubacelLogController extends ModuleAdminController {
                 'title' => $this->l('Modificar recarga'),
             ],
             'input' => [                
+                
+                [
+                    'type' => 'text',
+                    'label' => $this->l('Pedido'),
+                    'name' => 'id_order',
+                    'disabled' => true,
+                ],                
+                [
+                    'type' => 'text',
+                    'label' => $this->l('Cuenta'),
+                    'name' => 'account',
+                    'required' => true,
+                ],  
                 [
                     'type' => 'text',
                     'label' => $this->l('Intentos'),
                     'name' => 'attemps',
                     'required' => true,
+                ],              
+                [
+                    'type' => 'text',
+                    'label' => $this->l('Monto (CUC)'),
+                    'name' => 'amount',
+                    'disabled' => true,
+                ],
+                [
+                    'type' => 'text',
+                    'label' => $this->l('Estado'),
+                    'name' => 'status',
+                    'disabled' => true,
+                ],
+                [
+                    'type' => 'text',
+                    'label' => $this->l('Referencia'),
+                    'name' => 'reference',
+                    'disabled' => true,
+                ],
+                [
+                    'type' => 'text',
+                    'label' => $this->l('Mensaje'),
+                    'name' => 'message',
+                    'disabled' => true,
+                ],
+                [
+                    'type' => 'text',
+                    'label' => $this->l('Fecha de creación'),
+                    'name' => 'created_at',
+                    'disabled' => true,
+                ],
+                [
+                    'type' => 'text',
+                    'label' => $this->l('Última actualización'),
+                    'name' => 'updated_at',
+                    'disabled' => true,
                 ]
             ],
             'submit' => [
@@ -89,4 +138,9 @@ class AdminCubacelLogController extends ModuleAdminController {
     {
         return parent::renderView();
     } 
+
+    public function initToolbar() {
+        parent::initToolbar();
+        unset( $this->toolbar_btn['new'] );
+    }
 }

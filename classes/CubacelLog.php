@@ -9,6 +9,9 @@ class CubacelLog extends ObjectModel  {
     public $reference;
     public $amount;
     public $status;
+    public $message;
+    public $created_at;
+    public $updated_at;
     public static $definition = array(
         'table' => "cubacel_log",
         'primary' => 'id',
@@ -40,6 +43,10 @@ class CubacelLog extends ObjectModel  {
             'status' => array(
                 'type' => self::TYPE_STRING,
                 'required' => true
+            ),            
+            'message' => array(
+                'type' => self::TYPE_STRING,
+                'required' => false
             ),
         )
     );
