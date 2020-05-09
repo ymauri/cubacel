@@ -76,16 +76,16 @@ class AdminCubacelPromotionController extends ModuleAdminController {
                     'required' => true,
                     'values' => [
                         [
-                            'id' => 'rechage_type_on',
+                            'id' => 'rechage_'.Nomenclators::RECHARGE_MOBILE,
                             'value' => Nomenclators::RECHARGE_MOBILE,
                             'label' => $this->l(Nomenclators::RECHARGE_MOBILE)
                         ],
                         [
-                            'id' => 'rechage_type_off',
+                            'id' => 'rechage_'.Nomenclators::RECHARGE_INTERNET,
                             'value' => Nomenclators::RECHARGE_INTERNET,
                             'label' => $this->l(Nomenclators::RECHARGE_INTERNET)
                         ]
-                    ],
+                    ]
                 ],
                
                 [
