@@ -1,7 +1,10 @@
 let CubacelFront = function() {
     let idProduct;
-    let alertBox = $('.alert_notice').first();
-    let alertDefaultHTML = alertBox.html();
+    let alertBox = $('.alert_notice').first().clone();
+    let alertDefaultHTML = alertBox.html("");
+
+    //Make a copy of alert container for this module notifications
+    $('.alert_notice').first().parent().append(alertBox);
 
     /**
      * Validate cubacel phone number
@@ -10,7 +13,7 @@ let CubacelFront = function() {
      */
     let validatePhone = function(phone) {
         var regex = /^(52|53|54|55|57|56|58|59)([0-9]{6})$/;
-        return regex.test(number);
+        return regex.test(phone);
     }
 
     /**
@@ -59,12 +62,16 @@ let CubacelFront = function() {
             idProduct = $(this).data('id');
             let phone = $('#phone-' + idProduct);
             let email = $('#email-' + idProduct);
+            let isValidAccount = false;
             if (phone.length > 0 && phone.val() && validatePhone(phone.val())) {
                 saveCustomizedData(phone);
+                isValidAccount = true;
             }
             if (email.length > 0 && email.val() && validateEmail(email.val())) {
                 saveCustomizedData(email);
-            } else {
+                isValidAccount = true;
+
+            } else if (!isValidAccount) {
                 let message = phone.length ? "<i class='fa fa-phone'></i>Revise que el número de móvil tenga <b>8 dígitos</b>" :
                     email.length ? "<i class='fa fa-envelope'></i>La cuenta de internet debe terminar en <b>@nauta.com.cu</b>" :
                     "<i class='fa fa-info'></i> Formato no válido";
@@ -84,7 +91,7 @@ let CubacelFront = function() {
 
         setTimeout(function() {
             alertBox.removeClass('active').html(alertDefaultHTML);
-        }, 5000)
+        }, 3000)
     }
 
     return {
