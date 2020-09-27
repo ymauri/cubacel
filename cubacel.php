@@ -232,6 +232,7 @@ class Cubacel extends Module {
         $languageId = (int)($params['cookie']->id_lang);
         try {
             $query = "SELECT "._DB_PREFIX_."order_detail.id_order as id_order, 
+                        "._DB_PREFIX_."order_detail.id_order_detail as id_order_detail, 
                         "._DB_PREFIX_."orders.reference as reference, 
                         "._DB_PREFIX_."order_detail.product_id as product_id, 
                         "._DB_PREFIX_."order_detail.product_quantity as product_quantity, 
@@ -244,27 +245,29 @@ class Cubacel extends Module {
                         INNER JOIN `"._DB_PREFIX_."product` ON "._DB_PREFIX_."product.id_product = "._DB_PREFIX_."order_detail.product_id
                         INNER JOIN `"._DB_PREFIX_."feature_product` ON "._DB_PREFIX_."product.id_product = "._DB_PREFIX_."feature_product.id_product
                         INNER JOIN `"._DB_PREFIX_."feature_value_lang` ON "._DB_PREFIX_."feature_value_lang.id_feature_value = "._DB_PREFIX_."feature_product.id_feature_value
-                        WHERE "._DB_PREFIX_."order_detail.id_order = ".$params['id_order']." AND "._DB_PREFIX_."feature_value_lang.id_lang = ".$languageId;
+                        WHERE "._DB_PREFIX_."order_detail.id_order = ".$params['id_order']." AND "._DB_PREFIX_."feature_value_lang.id_lang = 1";
 
             $products = Db::getInstance()->executeS($query);
             
             foreach ($products as $product) {
                 $type = $this->service->getType($product['category']);  
-                $query = "SELECT * FROM "._DB_PREFIX_."cubacel_log WHERE id_order LIKE '".$product['id_order']."' AND account LIKE '".$product['data_value']."'";
+                $query = "SELECT * FROM "._DB_PREFIX_."cubacel_log WHERE id_order LIKE '".$product['id_order']."' AND order_detail LIKE '".$product['id_order_detail']."'";
                 $productDb = Db::getInstance()->getRow($query);
-                if (!empty($type) && !isset($productDb['id'])) {
+                if (!empty($type) && !isset($productDb['id']) ) {
                     Db::getInstance()->insert('cubacel_log',[
                         'id_order' => $product['id_order'],
                         'account' => $product['data_value'],
                         'type' => $type,
                         'attemps' => 0,
                         'amount' => $product['amount'],                    
-                        'status' => Nomenclators::STATUS_PAYED
+                        'status' => Nomenclators::STATUS_PAYED,
+                        'order_detail' => $product['id_order_detail']
                     ]);
                 }
             }   
             return true;
         } catch (Exception $e) {
+            var_dump($e);die;
            $this->logger->logDebug($e->getMessage()); 
             return false;
         }         
@@ -351,7 +354,7 @@ class Cubacel extends Module {
 
     private function uninstallTab() {
         return true;
-        $tabId = (int) Tab::getIdFromClassName('AdminInspiration');
+        $tabId = (int) Tab::getIdFromClassName('AdminCubacel');
         if (!$tabId) {
             return true;
         }
