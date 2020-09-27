@@ -10,6 +10,7 @@ $queries[] = "CREATE TABLE IF NOT EXISTS "._DB_PREFIX_."cubacel_log (
           `amount` int(11) NOT NULL,
           `status` varchar(128) NOT NULL,
           `message` text,
+          `order_detail` varchar(128),
           `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
           PRIMARY KEY (`id`)
