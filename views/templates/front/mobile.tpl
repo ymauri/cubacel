@@ -21,8 +21,8 @@
                    {foreach $products as $product}
                       <div class="col-12 col-sm-6 col-lg-2 cubacel-product mb-2">
                           <div class="item">
-                              <div class="item-inner hover_second_img">
-                                <div class="js-product-miniature" data-id-product="{$product['id']}" data-id-product-attribute="0" itemscope="" itemtype="http://schema.org/Product">
+                              <div class="item-inner ">
+                                <div class="js-product-miniature" data-id-product="{$product['id']}" data-id-product-attribute="0" itemscope="">
                                     <div class="text-center">
                                         <img class="w-100 img-thumbnail img-fluid" src="{$link->getImageLink($product['link_rewrite'], $product['id_image'])}" width="370" height="448" alt="" style="opacity: 1;">
                                         <span class="box-new-sale"></span>
