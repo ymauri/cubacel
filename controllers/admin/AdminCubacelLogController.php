@@ -88,8 +88,8 @@ class AdminCubacelLogController extends ModuleAdminController {
                 [
                     'type' => 'text',
                     'label' => $this->l('Estado'),
+                    'required' => true,
                     'name' => 'status',
-                    'disabled' => true,
                 ],
                 [
                     'type' => 'text',
